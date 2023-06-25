@@ -183,7 +183,7 @@
 	  
   
   //instruções do tipo J
-  6'd2:begin
+  6'b000010:begin
 	  RegDst <= 0; 
 	  jump <= 1; 
 	  ALUop <= 0;

@@ -1,5 +1,7 @@
-module ALU_Add_32(addr1,addr2,out_addr);
- input [31:0] addr1,addr2;
- output [31:0] out_addr;
- assign out_addr = addr1+addr2;
+module ALU_Add_32(
+	 input [31:0] next_instruction_address, 
+	 input [28:0] signal_28bits,
+	 output [31:0] jump_address);
+
+ assign jump_address = {next_instruction_address[31:28], signal_28bits };
 endmodule

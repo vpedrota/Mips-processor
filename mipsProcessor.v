@@ -1,18 +1,18 @@
-module mipsProcessor(
+	module mipsProcessor(
 
 								input CLOCK_50, 
 								input halt,reset,
 								output [31:0] instruction, 
-								output RegDst, Jump, Branch, MemtoReg, ALUSrc, RegWrite, MemWrite, MemRead, clock_output,
+								output RegDst, Jump, Branch, MemtoReg, ALUSrc, RegWrite, MemWrite, MemRead, clock_output, zero,
 								output [2:0] ALUop, 
 								output [4:0] write_register,
-								output[31:0] sign, ALU_output, read_data1, read_data2, write_data_input, ALU_input2
+								output[31:0] jump_address,sign, ALU_output, read_data1, read_data2, write_data_input, ALU_input2, address_in, address_out, next_instruction_address
 			
 		);
 		
 		
  wire [4:0]  ALU_ctr;
- wire [31:0] address_in, address_out, next_instruction_address, read_data_memory, out_sign, zero, and_branch_zero, desvio, instruction_Left;
+ wire [31:0]  read_data_memory, out_sign, and_branch_zero, desvio, instruction_Left, branch_address;
  
  ClockManager #(0) clock(.reset(reset), .clock(~CLOCK_50), .clock_output(clock_output)); 								
 							
@@ -42,14 +42,16 @@ module mipsProcessor(
  
  Left2(sign, out_sign);
  
- ALU_Add_32 FinalAdress(next_instruction_address, out_sign, jump_address);
+ Left2_26(instruction[25:0], instruction_Left);
+ 
+ ALU_Add_32 FinalAdress(.next_instruction_address(next_instruction_address), .signal_28bits(instruction_Left), .jump_address(jump_address));
+ 
+ Branch_address_adder(out_sign, next_instruction_address, branch_address);
  
  doBranch(.flag(Branch), .zero(zero), .out(and_branch_zero));
  
- MUX #(32) Branchs(next_instruction_address, jump_address, and_branch_zero, desvio);
+ MUX #(32) Branchs(next_instruction_address, branch_address, and_branch_zero, desvio);
  
- Left2_26(instruction[25:0], next_instruction_address[31:28], instruction_Left);
- 
- MUX #(32) jump(desvio, instruction_Left, Jump, address_in);	
+ MUX #(32) jump(desvio, jump_address, Jump, address_in);	
  
 endmodule
