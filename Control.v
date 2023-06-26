@@ -1,6 +1,6 @@
- module Control_Unit(op,RegDst,jump,Branch,MemRead,MemtoReg,ALUop,MemWrite,ALUSrc,RegWrite);
+ module Control_Unit(op,RegDst,jump,Branch,MemRead,MemtoReg,ALUop,MemWrite,ALUSrc,RegWrite, jal, jr);
  input [5:0] op;
- output reg RegDst,jump,Branch,MemtoReg,ALUSrc,RegWrite,MemWrite,MemRead;
+ output reg RegDst,jump,Branch,MemtoReg,ALUSrc,RegWrite,MemWrite,MemRead, jal, jr;
  output reg [2:0] ALUop;
  always @ *
  begin
@@ -11,6 +11,7 @@
   
   //------------------------------------------------------------//
   
+
   
   // SYSCALL - input
   // flags para realizar a parada do clock e esperar a entrada do usuário
@@ -24,6 +25,8 @@
 	  MemWrite <= 0; 
 	  MemRead <= 0; 
 	  ALUSrc <= 0;
+	  jal <= 0;
+	  jr <= 0;
   end
   
   // SYSCALL - output
@@ -38,6 +41,8 @@
 	  MemWrite <= 0; 
 	  MemRead <= 0; 
 	  ALUSrc <= 0;
+	  jal <= 0;
+	  jr <= 0;
   end
   
   //instruções tipo R
@@ -54,6 +59,8 @@
 	  MemWrite <= 0; 
 	  MemRead <= 0; 
 	  ALUSrc <= 0;
+	  jal <= 0;
+	  jr <= 0;
   end
   
   //instrução tipo I ADDI
@@ -70,6 +77,8 @@
 	  MemWrite <= 0; 
 	  MemRead <= 0; 
 	  ALUSrc <= 1; 
+	  jal <= 0;
+	  jr <= 0;
   end
   
   //instrução tipo I SUBI
@@ -86,6 +95,8 @@
 	  MemWrite <= 0; 
 	  MemRead <= 0; 
 	  ALUSrc <= 1; 
+	  jal <= 0;
+	  jr <= 0;
   end
   
   //instruções tipo I LW 
@@ -102,6 +113,8 @@
 	  MemWrite <= 0; 
 	  MemRead <= 1; 
 	  ALUSrc <= 1;
+	  jal <= 0;
+	  jr <= 0;
 	end
   
   //instruções tipo I SW 
@@ -118,6 +131,8 @@
 	  MemWrite <= 1; 
 	  MemRead <= 0; 
 	  ALUSrc <= 1;
+	  jal <= 0;
+	  jr <= 0;
   end
   
   
@@ -134,6 +149,8 @@
 	  MemWrite <= 0; 
 	  MemRead <= 0; 
 	  ALUSrc <= 0;
+	  jal <= 0;
+	  jr <= 0;
   end
   
   //instrução tipo I BNE
@@ -149,6 +166,8 @@
 	  MemWrite <= 0; 
 	  MemRead <= 0; 
 	  ALUSrc <= 0;
+	  jal <= 0;
+	  jr <= 0;
 	end
   
   //instrução tipo I BGT
@@ -164,6 +183,8 @@
 	  MemWrite <= 0;
 	  MemRead <= 0;
 	  ALUSrc <= 0;
+	  jal <= 0;
+	  jr <= 0;
 	end
   
   //instrução tipo I BLT
@@ -179,6 +200,8 @@
 	  MemWrite <= 0;
 	  MemRead <= 0; 
 	  ALUSrc <= 0;
+	  jal <= 0;
+	  jr <= 0;
 	end
 	  
   
@@ -193,7 +216,39 @@
 	  MemWrite <= 0; 
 	  MemRead <= 0; 
 	  ALUSrc <= 0;
+	  jal <= 0;
+	  jr <= 0;
 	end
+	
+	
+	  
+   6'b000011:begin 
+	  RegDst <= 0; 
+	  jump <= 1; 
+	  ALUop <= 0;
+	  Branch <= 0; 
+	  MemtoReg <= 0; 
+	  RegWrite <= 1;
+	  MemWrite <= 0; 
+	  MemRead <= 0; 
+	  ALUSrc <= 0;
+	  jal <= 1;
+	  jr <= 0;
+  end
+  
+  6'b001111:begin 
+	  RegDst <= 0; 
+	  jump <= 0; 
+	  ALUop <= 0;
+	  Branch <= 0; 
+	  MemtoReg <= 0; 
+	  RegWrite <= 0;
+	  MemWrite <= 0; 
+	  MemRead <= 0; 
+	  ALUSrc <= 0;
+	  jal <= 0;
+	  jr <= 1;
+  end
 	  
   default:begin
 	  RegDst <= 0; 
@@ -205,6 +260,8 @@
 	  MemWrite <= 0;
 	  MemRead <= 0; 
 	  ALUSrc <= 0;
+	  jal <= 0;
+	  jr <= 0;
 	end
   endcase
  end
