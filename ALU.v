@@ -4,7 +4,7 @@ module ALU(
 		output Zero, 
 		output reg [31:0] ALU_output);
 
- always @ (data1,data2,ALU_ctr)
+ always @ (ALU_ctr, data1, data2)
  begin
     case(ALU_ctr)
 		  4'd0: ALU_output <= data1&data2;
@@ -12,12 +12,13 @@ module ALU(
 		  4'd2: ALU_output <= data1+data2;
 		  4'd3: ALU_output <= (data1!=data2) ? 0: 1;
 		  4'd4: ALU_output <= (data1>data2) ? 0: 1;
-		  4'd4: ALU_output <= (data1<data2) ? 0: 1;
+		  4'd5: ALU_output <= (data1<data2) ? 0: 1;
 		  4'd6: ALU_output <= data1-data2;
-		  4'd7: ALU_output <= data1<data2 ? 1:0;
-		  4'd12:ALU_output <= ~(data1|data2);
+		  4'd7: ALU_output <= data1<=data2 ? 0 : 1;
 		  4'd8: ALU_output <= data1*data2;
 		  4'd9: ALU_output <= data1/data2;
+		  4'd10: ALU_output <= (data1==data2) ? 0: 1;
+		  4'd12:ALU_output <= ~(data1|data2);
 		  default: ALU_output <= 0;
   endcase
  end

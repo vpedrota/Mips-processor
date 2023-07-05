@@ -1,4 +1,4 @@
-module Add_PC(address_in, address_added);
+module PCAdder(address_in, address_added);
 		input [31:0] address_in; 
 		output [31:0] address_added;
 		

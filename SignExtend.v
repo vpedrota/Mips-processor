@@ -1,4 +1,4 @@
-module sign_ep( input [15:0] signal_16, output reg [31:0]  signal_32);
+module SignExtend( input [15:0] signal_16, output reg [31:0]  signal_32);
 
 	always @(signal_16)
 	begin
